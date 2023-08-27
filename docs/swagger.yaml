@@ -1,0 +1,638 @@
+definitions:
+  models.AddCategoryRequest:
+    properties:
+      name:
+        maxLength: 256
+        type: string
+    required:
+    - name
+    type: object
+  models.AddCommentRequest:
+    properties:
+      body:
+        type: string
+      postId:
+        type: integer
+    required:
+    - body
+    - postId
+    type: object
+  models.CategoryResponse:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.Comment:
+    properties:
+      authorId:
+        type: integer
+      body:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      postId:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.CreatePostRequest:
+    properties:
+      body:
+        maxLength: 8142
+        type: string
+      categoryIds:
+        items:
+          type: integer
+        type: array
+      thumbnail:
+        type: string
+      title:
+        maxLength: 256
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  models.PostResponse:
+    properties:
+      body:
+        maxLength: 8142
+        type: string
+      categories:
+        items:
+          $ref: '#/definitions/models.CategoryResponse'
+        type: array
+      createdAt:
+        type: string
+      id:
+        type: integer
+      thumbnail:
+        type: string
+      title:
+        maxLength: 256
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  models.SignInRequest:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 64
+        minLength: 5
+        type: string
+    required:
+    - email
+    type: object
+  models.SignInResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.SignUpRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        maxLength: 64
+        minLength: 5
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  models.SignUpResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.UpdateCategoryRequest:
+    properties:
+      name:
+        maxLength: 256
+        type: string
+    required:
+    - name
+    type: object
+  models.UpdateCommentRequest:
+    properties:
+      body:
+        type: string
+    required:
+    - body
+    type: object
+  models.UpdatePostRequest:
+    properties:
+      body:
+        maxLength: 8142
+        type: string
+      categoryIds:
+        items:
+          type: integer
+        type: array
+      thumbnail:
+        type: string
+      title:
+        maxLength: 256
+        type: string
+    required:
+    - body
+    - title
+    type: object
+  models.UpdateUserRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      photo:
+        type: string
+    required:
+    - name
+    - password
+    type: object
+  models.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+info:
+  contact:
+    email: tubagus.sflh@gmail.com
+    name: API Support
+    url: http://github.com/bagus2x
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /categories:
+    get:
+      description: list of all categories.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CategoryResponse'
+            type: array
+      summary: get all categories.
+      tags:
+      - Category
+  /category:
+    post:
+      description: Creating a new category.
+      parameters:
+      - description: the body for creating category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddCategoryRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.CategoryResponse'
+      summary: create a new category.
+      tags:
+      - Category
+  /category/{categoryId}:
+    delete:
+      description: deleting a new category.
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Category id
+        in: path
+        name: categoryId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: delete a category.
+      tags:
+      - Category
+    get:
+      description: finding a category by id.
+      parameters:
+      - description: Category id
+        in: path
+        name: categoryId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CategoryResponse'
+      summary: get a category by id.
+      tags:
+      - Category
+    put:
+      description: updating a category.
+      parameters:
+      - description: the body for updating category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateCategoryRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Category id
+        in: path
+        name: categoryId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CategoryResponse'
+      summary: update single category.
+      tags:
+      - Category
+  /comment:
+    post:
+      description: Creating a new comment.
+      parameters:
+      - description: the body for creating comment
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddCommentRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Comment'
+      summary: create a new comment.
+      tags:
+      - Comment
+  /comment/{commentId}:
+    delete:
+      description: deleting a comment by id.
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Comment id
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: delete single comment.
+      tags:
+      - Comment
+    get:
+      description: finding a comment by id.
+      parameters:
+      - description: Comment id
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+      summary: get a comment by id.
+      tags:
+      - Comment
+    put:
+      description: updating a comment.
+      parameters:
+      - description: the body for updating comment
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateCommentRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Comment id
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+      summary: update single comment.
+      tags:
+      - Comment
+  /post:
+    post:
+      description: Creating a new post.
+      parameters:
+      - description: the body for creating post
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreatePostRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.PostResponse'
+      summary: create a new post.
+      tags:
+      - Post
+  /post/{postId}:
+    delete:
+      description: deleting a post.
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post id
+        in: path
+        name: postId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: delete single post.
+      tags:
+      - Post
+    get:
+      description: finding a post by id.
+      parameters:
+      - description: Post id
+        in: path
+        name: postId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PostResponse'
+      summary: get a category by id.
+      tags:
+      - Post
+    put:
+      description: updating a post.
+      parameters:
+      - description: the body for updating category
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePostRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post id
+        in: path
+        name: postId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PostResponse'
+      summary: update single post.
+      tags:
+      - Post
+  /post/{postId}/comments:
+    get:
+      description: finding  comment by post id.
+      parameters:
+      - description: Post id
+        in: path
+        name: postId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Comment'
+            type: array
+      summary: get comments by post id.
+      tags:
+      - Comment
+  /posts:
+    get:
+      description: list of all posts.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PostResponse'
+            type: array
+      summary: get all posts.
+      tags:
+      - Post
+  /user:
+    delete:
+      description: Delete authenticated user.
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a user.
+      tags:
+      - User
+    put:
+      description: Update authenticated user.
+      parameters:
+      - description: the body for updating user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateUserRequest'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SignUpResponse'
+      summary: Update a user.
+      tags:
+      - User
+  /user/{userId}:
+    get:
+      description: Finding user by id.
+      parameters:
+      - description: Project id
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserResponse'
+      summary: get a user by id.
+      tags:
+      - User
+  /user/signin:
+    post:
+      description: Gaining access to the protected API. Put the token from response
+        in the Authorization header to access protected API.
+      parameters:
+      - description: the body to sign in
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SignInResponse'
+      summary: log in with registered email.
+      tags:
+      - User
+  /user/signup:
+    post:
+      description: Creating a new account to authenticate a user.
+      parameters:
+      - description: the body for sign up
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SignUpResponse'
+      summary: create a new account.
+      tags:
+      - User
+  /users:
+    get:
+      description: list of all users.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UserResponse'
+            type: array
+      summary: get all users.
+      tags:
+      - User
+swagger: "2.0"
